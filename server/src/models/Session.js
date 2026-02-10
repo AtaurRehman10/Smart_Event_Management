@@ -22,6 +22,10 @@ const sessionSchema = new mongoose.Schema({
      },
      notes: { type: String },
      color: { type: String, default: '#6366f1' },
+     track: { type: String },
+     bookmarksCount: { type: Number, default: 0 },
+     attendanceCount: { type: Number, default: 0 },
+     engagementScore: { type: Number, default: 0 }, // computed daily
 }, { timestamps: true });
 
 sessionSchema.index({ event: 1, startTime: 1 });

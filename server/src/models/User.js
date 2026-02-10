@@ -23,6 +23,7 @@ const userSchema = new mongoose.Schema({
      industry: { type: String, trim: true },
      phone: { type: String, trim: true },
      bio: { type: String, maxlength: 500 },
+     goals: [{ type: String }], // ["Networking", "Jobs"]
 }, { timestamps: true });
 
 // Index for text search

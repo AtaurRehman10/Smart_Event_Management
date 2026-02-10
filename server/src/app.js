@@ -13,6 +13,10 @@ import badgeRoutes from './routes/badgeRoutes.js';
 import pollRoutes from './routes/pollRoutes.js';
 import searchRoutes from './routes/searchRoutes.js';
 import stripeRoutes from './routes/stripeRoutes.js';
+import matchingRoutes from './routes/matching.routes.js';
+import recommendationRoutes from './routes/recommendation.routes.js';
+import agendaRoutes from './routes/agenda.routes.js';
+import chatbotRoutes from './routes/chatbot.routes.js';
 
 const app = express();
 
@@ -39,6 +43,12 @@ app.use('/api/badges', badgeRoutes);
 app.use('/api/polls', pollRoutes);
 app.use('/api/search', searchRoutes);
 app.use('/api/stripe', stripeRoutes);
+
+// AI Routes
+app.use('/api/matching', matchingRoutes);
+app.use('/api/recommendations', recommendationRoutes);
+app.use('/api/agenda', agendaRoutes);
+app.use('/api/chatbot', chatbotRoutes);
 
 // Error handler (must be last)
 app.use(errorHandler);
