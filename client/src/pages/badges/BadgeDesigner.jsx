@@ -18,7 +18,7 @@ export default function BadgeDesigner() {
           { id: 1, type: 'text', content: '{{name}}', x: 200, y: 80, fontSize: 24, color: '#ffffff', fontWeight: 'bold' },
           { id: 2, type: 'text', content: '{{organization}}', x: 200, y: 120, fontSize: 14, color: '#94a3b8', fontWeight: 'normal' },
           { id: 3, type: 'text', content: '{{role}}', x: 200, y: 155, fontSize: 12, color: '#6366f1', fontWeight: 'bold' },
-          { id: 4, type: 'text', content: 'EventSphere 2026', x: 200, y: 220, fontSize: 11, color: '#64748b', fontWeight: 'normal' },
+          { id: 4, type: 'text', content: 'DevCon 2026', x: 200, y: 220, fontSize: 11, color: '#64748b', fontWeight: 'normal' },
      ]);
      const [selectedId, setSelectedId] = useState(null);
      const [dragging, setDragging] = useState(null);

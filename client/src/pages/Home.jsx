@@ -1,209 +1,236 @@
 import { Link } from 'react-router-dom';
-import { useAuth } from '../hooks/useAuth';
-import { useState, useEffect } from 'react';
-import { Zap } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import {
+     Code2,
+     LayoutGrid,
+     Users,
+     BellRing,
+     BarChart3,
+     IdCard,
+     Smartphone,
+     ArrowRight,
+     PlayCircle,
+     Terminal
+} from 'lucide-react';
 
-function AnimatedCounter({ end, label, suffix = '' }) {
+function AnimatedCounter({ end, label, suffix = '', duration = 1800 }) {
      const [count, setCount] = useState(0);
+
      useEffect(() => {
-          let start = 0;
-          const duration = 2000;
-          const step = Math.ceil(end / (duration / 16));
-          const timer = setInterval(() => {
-               start += step;
-               if (start >= end) { setCount(end); clearInterval(timer); }
-               else setCount(start);
-          }, 16);
-          return () => clearInterval(timer);
-     }, [end]);
+          let raf = 0;
+          const start = performance.now();
+
+          const tick = (now) => {
+               const t = Math.min(1, (now - start) / duration);
+               // smooth easeOutCubic
+               const eased = 1 - Math.pow(1 - t, 3);
+               setCount(Math.round(eased * end));
+               if (t < 1) raf = requestAnimationFrame(tick);
+          };
+
+          raf = requestAnimationFrame(tick);
+          return () => cancelAnimationFrame(raf);
+     }, [end, duration]);
+
      return (
           <div className="text-center">
-               <p className="text-3xl md:text-4xl font-bold gradient-text">{count.toLocaleString()}{suffix}</p>
-               <p className="text-sm text-[var(--text-muted)] mt-1">{label}</p>
+               <p className="text-3xl md:text-4xl font-bold tracking-tight gradient-text mb-1">
+                    {count.toLocaleString()}
+                    {suffix}
+               </p>
+               <p className="text-xs md:text-sm text-white/60 font-medium">{label}</p>
           </div>
      );
 }
 
-function FeatureCard({ icon, title, description, color, delay }) {
+function FeatureCard({ icon: Icon, title, description, delay = '0s' }) {
      return (
           <div
-               className="gradient-border-card p-6 hover:scale-[1.03] transition-all duration-500 animate-slide-up group"
+               className="glass-card p-6 animate-slide-up group h-full"
                style={{ animationDelay: delay }}
           >
-               <div
-                    className="w-14 h-14 rounded-2xl flex items-center justify-center mb-5 transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3"
-                    style={{ background: `linear-gradient(135deg, ${color}20, ${color}40)` }}
-               >
-                    <span className="text-2xl">{icon}</span>
+               <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-5 bg-white/[0.03] border border-white/5 group-hover:bg-primary/10 group-hover:border-primary/20 transition-colors duration-300">
+                    <Icon className="w-6 h-6 text-indigo-400 group-hover:text-indigo-300 transition-colors" />
                </div>
-               <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-2">{title}</h3>
-               <p className="text-sm text-[var(--text-muted)] leading-relaxed">{description}</p>
+               <h3 className="text-lg font-semibold text-white mb-2 tracking-tight group-hover:text-indigo-200 transition-colors">
+                    {title}
+               </h3>
+               <p className="text-sm text-slate-400 leading-relaxed group-hover:text-slate-300 transition-colors">
+                    {description}
+               </p>
           </div>
+     );
+}
+
+function PremiumBackdrop() {
+     return (
+          <>
+               {/* Background */}
+               <div className="absolute inset-0 -z-10 bg-[#0a0e1a]" />
+
+               {/* Animated Gradient Background */}
+               <div className="absolute inset-0 -z-10 opacity-40 animated-gradient-bg" />
+
+               {/* Subtle grid pattern */}
+               <div className="absolute inset-0 -z-10 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:64px_64px] [mask-image:radial-gradient(ellipse_at_center,black_40%,transparent_100%)] opacity-20" />
+
+               {/* Glow orbs */}
+               <div className="absolute -z-10 top-[-20%] left-[-10%] w-[600px] h-[600px] rounded-full bg-indigo-600/20 blur-[120px] animate-float-slow" />
+               <div className="absolute -z-10 bottom-[-20%] right-[-10%] w-[600px] h-[600px] rounded-full bg-cyan-600/10 blur-[120px] animate-float-slow" style={{ animationDelay: '2s' }} />
+               <div className="absolute -z-10 top-[40%] left-[50%] translate-x-[-50%] w-[400px] h-[400px] rounded-full bg-purple-600/10 blur-[100px]" />
+          </>
      );
 }
 
 export default function Home() {
-     const { user } = useAuth();
+
 
      return (
-          <div className="min-h-screen relative overflow-hidden animated-gradient-bg">
-               {/* Decorative Orbs */}
-               <div className="orb orb-primary w-[600px] h-[600px] -top-[200px] -left-[200px] animate-float-slow" />
-               <div className="orb orb-secondary w-[500px] h-[500px] -bottom-[150px] -right-[150px] animate-float" />
-               <div className="orb orb-accent w-[300px] h-[300px] top-[40%] right-[10%] opacity-[0.04]" />
+          <div className="min-h-screen relative overflow-hidden flex flex-col font-sans">
+               <PremiumBackdrop />
 
-               {/* Floating geometric shapes */}
-               <div className="absolute top-[15%] left-[8%] w-3 h-3 rounded-full bg-[var(--color-primary)] opacity-30 animate-float" style={{ animationDelay: '0s' }} />
-               <div className="absolute top-[25%] right-[12%] w-2 h-2 rounded-full bg-[var(--color-secondary)] opacity-25 animate-float" style={{ animationDelay: '1s' }} />
-               <div className="absolute top-[60%] left-[15%] w-4 h-4 rounded-sm bg-[var(--color-accent)] opacity-15 animate-float-slow rotate-45" style={{ animationDelay: '2s' }} />
-               <div className="absolute top-[70%] right-[20%] w-3 h-3 rounded-full bg-[var(--color-primary-light)] opacity-20 animate-float" style={{ animationDelay: '0.5s' }} />
-               <div className="absolute top-[45%] left-[45%] w-2 h-2 rounded-full bg-[var(--color-success)] opacity-20 animate-float-slow" style={{ animationDelay: '1.5s' }} />
-
-               {/* Navigation */}
-               <nav className="relative z-20 flex items-center justify-between px-6 md:px-12 py-5">
-                    <div className="flex items-center gap-3">
-                         <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[var(--color-primary)] to-[var(--color-secondary)] flex items-center justify-center shadow-lg">
-                              <Zap className="w-5 h-5 text-white" />
+               {/* Top Nav */}
+               <nav className="relative z-20 w-full px-6">
+                    <div className="flex items-center justify-between py-10  mx-auto">
+                         <div className="flex items-center gap-3 group cursor-pointer">
+                              <div className="w-10 h-10 rounded-xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center group-hover:bg-indigo-500/20 group-hover:scale-105 transition-all duration-300">
+                                   <Code2 className="w-6 h-6 text-indigo-400" />
+                              </div>
+                              <span className="text-xl font-bold tracking-tight text-white group-hover:text-indigo-100 transition-colors">
+                                   EventSphere
+                              </span>
                          </div>
-                         <span className="text-xl font-bold gradient-text">EventSphere</span>
-                    </div>
-                    <div className="flex items-center gap-3">
-                         {user ? (
-                              <Link to={user.role === 'Attendee' ? '/dashboard/attendee' : '/dashboard'} className="btn btn-primary">
-                                   Dashboard →
+
+                         <div className="flex items-center gap-4">
+                              <Link
+                                   to="/login"
+                                   className="text-slate-300 hover:text-white transition-colors text-sm font-medium"
+                              >
+                                   Login
                               </Link>
-                         ) : (
-                              <>
-                                   <Link to="/login" className="btn btn-secondary">Sign In</Link>
-                                   <Link to="/register" className="btn btn-primary">Get Started</Link>
-                              </>
-                         )}
+                              <Link
+                                   to="/register"
+                                   className="btn btn-primary"
+                              >
+                                   Register
+                              </Link>
+                         </div>
                     </div>
                </nav>
 
-               {/* Hero Section */}
-               <div className="relative z-10 container mx-auto px-6 pt-16 pb-12 flex flex-col items-center justify-center text-center">
-                    <div className="animate-slide-up">
-                         <span className="badge badge-primary text-xs tracking-wide uppercase mb-6 inline-flex">
-                              ✨ Next-Gen Event Platform
-                         </span>
-                    </div>
+               {/* Hero */}
+               <main className="flex-grow flex flex-col items-center justify-center relative z-10 px-6 pt-12 md:pt-20 pb-20">
+                    <div className="container max-w-7xl mx-auto text-center">
+                         <div className="inline-flex items-center gap-2 rounded-full border border-indigo-500/20 bg-indigo-500/5 px-4 py-1.5 text-xs font-medium text-indigo-300 animate-slide-up hover:bg-indigo-500/10 transition-colors cursor-default mb-8">
+                              <Terminal className="w-3.5 h-3.5" />
+                              <span>The Ultimate Developer Conference</span>
+                         </div>
 
-                    <h1 className="text-5xl md:text-7xl lg:text-8xl font-extrabold mb-6 tracking-tight animate-slide-up leading-[1.05]" style={{ animationDelay: '0.1s' }}>
-                         <span className="bg-clip-text text-transparent bg-gradient-to-r from-white via-blue-100 to-blue-200 text-glow">
-                              EventSphere
-                         </span>
-                         <br />
-                         <span className="text-3xl md:text-5xl lg:text-6xl gradient-text">
-                              The Future of Events
-                         </span>
-                    </h1>
+                         <h1
+                              className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tighter text-white animate-slide-up leading-[1.1] mb-6"
+                              style={{ animationDelay: '0.1s' }}
+                         >
+                              Build the
+                              <span className="block gradient-text pb-2">
+                                   Future of Tech
+                              </span>
+                         </h1>
 
-                    <p className="text-base md:text-lg text-[var(--text-secondary)] max-w-2xl mb-10 animate-slide-up leading-relaxed" style={{ animationDelay: '0.2s' }}>
-                         Experience the next generation of event management — interactive floor plans,
-                         real-time networking, smart scheduling, and live engagement tools, all in one
-                         beautifully crafted platform.
-                    </p>
-
-                    <div className="flex flex-col sm:flex-row gap-4 animate-slide-up" style={{ animationDelay: '0.3s' }}>
-                         {user ? (
-                              <Link to={user.role === 'Attendee' ? '/dashboard/attendee' : '/dashboard'} className="btn btn-primary px-8 py-3.5 text-base">
-                                   Go to Dashboard →
-                              </Link>
-                         ) : (
-                              <>
-                                   <Link to="/register" className="btn btn-primary px-8 py-3.5 text-base">
-                                        <Zap className="w-5 h-5" />
-                                        Start Free
-                                   </Link>
-                                   <Link to="/login" className="btn btn-secondary px-8 py-3.5 text-base">
-                                        Sign In
-                                   </Link>
-                              </>
-                         )}
-                    </div>
-               </div>
-
-               {/* Stats Section */}
-               <div className="relative z-10 container mx-auto px-6 py-12">
-                    <div className="glass-card-static p-8 grid grid-cols-2 md:grid-cols-4 gap-8 animate-slide-up" style={{ animationDelay: '0.4s' }}>
-                         <AnimatedCounter end={10000} label="Events Hosted" suffix="+" />
-                         <AnimatedCounter end={50000} label="Attendees" suffix="+" />
-                         <AnimatedCounter end={500} label="Organizations" suffix="+" />
-                         <AnimatedCounter end={99} label="Satisfaction" suffix="%" />
-                    </div>
-               </div>
-
-               {/* Feature Grid */}
-               <div className="relative z-10 container mx-auto px-6 py-16">
-                    <div className="text-center mb-12 animate-slide-up" style={{ animationDelay: '0.2s' }}>
-                         <h2 className="text-3xl md:text-4xl font-bold text-[var(--text-primary)] mb-3">
-                              Everything You Need
-                         </h2>
-                         <p className="text-[var(--text-muted)] max-w-xl mx-auto">
-                              Powerful features designed to make your events unforgettable
+                         <p
+                              className="text-lg text-center md:text-xl text-slate-400 max-w-2xl mx-auto leading-relaxed animate-slide-up font-light mb-10"
+                              style={{ animationDelay: '0.2s' }}
+                         >
+                              Join thousands of developers, innovators, and industry leaders for an immersive experience of learning, networking, and building the next generation of software.
                          </p>
-                    </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-6xl mx-auto">
-                         <FeatureCard
-                              icon="🗺️"
-                              title="Interactive Venue Maps"
-                              description="Navigate venues with ease using dynamic SVG-based floor plans with real-time capacity tracking."
-                              color="#6366f1"
-                              delay="0.1s"
-                         />
-                         <FeatureCard
-                              icon="🤝"
-                              title="Smart Networking"
-                              description="Connect with attendees and exchange digital business cards instantly at any event."
-                              color="#06b6d4"
-                              delay="0.15s"
-                         />
-                         <FeatureCard
-                              icon="⚡"
-                              title="Real-time Updates"
-                              description="Live session capacity tracking, instant notifications, and real-time event updates."
-                              color="#f59e0b"
-                              delay="0.2s"
-                         />
-                         <FeatureCard
-                              icon="📊"
-                              title="Live Polling & Q&A"
-                              description="Engage your audience with real-time polls, Q&A sessions, and interactive presentations."
-                              color="#10b981"
-                              delay="0.25s"
-                         />
-                         <FeatureCard
-                              icon="🏷️"
-                              title="Badge Designer"
-                              description="Create stunning custom badges with our drag-and-drop designer and export to PDF."
-                              color="#8b5cf6"
-                              delay="0.3s"
-                         />
-                         <FeatureCard
-                              icon="📱"
-                              title="PWA Ready"
-                              description="Works offline, installable on any device. Always accessible, even without an internet connection."
-                              color="#ec4899"
-                              delay="0.35s"
-                         />
+
+
+                         {/* Hero Stats */}
+                         <div
+                              className="mt-20 mx-auto max-w-5xl glass-card p-8 animate-slide-up"
+                              style={{ animationDelay: '0.4s' }}
+                         >
+                              <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
+                                   <AnimatedCounter end={5000} label="Developers" suffix="+" />
+                                   <AnimatedCounter end={120} label="Speakers" suffix="+" />
+                                   <AnimatedCounter end={45} label="Workshops" suffix="+" />
+                                   <AnimatedCounter end={3} label="Days of Code" suffix="" />
+                              </div>
+                         </div>
                     </div>
-               </div>
+               </main>
+
+               {/* Features Section */}
+               <section className="relative z-10 py-24 bg-gradient-to-b from-transparent to-[#0a0e1a]/80 mx-auto">
+                    <div className="container  mx-auto px-6">
+                         <div className="text-center mb-16 animate-slide-up" style={{ animationDelay: '0.15s' }}>
+                              <h2 className="text-3xl md:text-4xl font-bold text-white tracking-tight mb-4">
+                                   Why use EventSphere?
+                              </h2>
+                              <p className="text-slate-400  mx-auto text-lg">
+                                   Experience a developer-focused event designed to inspire, educate, and connect.
+                              </p>
+                         </div>
+
+                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                              <FeatureCard
+                                   icon={LayoutGrid}
+                                   title="Interactive Sessions"
+                                   description="Join deep-dive technical sessions led by industry experts and core maintainers."
+                                   delay="0.10s"
+                              />
+                              <FeatureCard
+                                   icon={Users}
+                                   title="Global Networking"
+                                   description="Connect with developers from around the world through smart matchmaking."
+                                   delay="0.15s"
+                              />
+                              <FeatureCard
+                                   icon={BellRing}
+                                   title="Real-time Updates"
+                                   description="Stay organized with a personalized schedule and instant session notifications."
+                                   delay="0.20s"
+                              />
+                              <FeatureCard
+                                   icon={BarChart3}
+                                   title="Live Workshops"
+                                   description="Hands-on coding workshops to learn new frameworks and tools efficiently."
+                                   delay="0.25s"
+                              />
+                              <FeatureCard
+                                   icon={IdCard}
+                                   title="Career Fair"
+                                   description="Meet top tech companies hiring for remote and on-site roles."
+                                   delay="0.30s"
+                              />
+                              <FeatureCard
+                                   icon={Smartphone}
+                                   title="Hackathon"
+                                   description="Participate in our 24-hour hackathon and win amazing prizes."
+                                   delay="0.35s"
+                              />
+                         </div>
+                    </div>
+               </section>
 
                {/* Footer */}
-               <footer className="relative z-10 border-t border-[var(--border-color)] mt-12">
-                    <div className="container mx-auto px-6 py-8 flex flex-col md:flex-row items-center justify-between gap-4">
-                         <div className="flex items-center gap-2">
-                              <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-[var(--color-primary)] to-[var(--color-secondary)] flex items-center justify-center">
-                                   <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                                   </svg>
+               <footer className="relative z-10 border-t border-white/5 bg-[#0a0e1a]">
+                    <div className="container max-w-7xl mx-auto px-6 py-10 flex flex-col md:flex-row items-center justify-between gap-6">
+                         <div className="flex items-center gap-3">
+                              <div className="w-8 h-8 rounded-lg bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center">
+                                   <Code2 className="w-5 h-5 text-indigo-400" />
                               </div>
-                              <span className="text-sm font-semibold gradient-text">EventSphere</span>
+                              <span className="text-sm font-semibold text-slate-300">DevCon 2026</span>
                          </div>
-                         <p className="text-sm text-[var(--text-muted)]">
-                              © 2026 EventSphere. Smart Event Management & Networking Platform.
+
+                         <div className="flex items-center gap-6 text-sm text-slate-500">
+                              <a href="#" className="hover:text-indigo-400 transition-colors">Privacy Policy</a>
+                              <a href="#" className="hover:text-indigo-400 transition-colors">Terms of Service</a>
+                              <a href="#" className="hover:text-indigo-400 transition-colors">Contact</a>
+                         </div>
+
+                         <p className="text-xs text-slate-600">
+                              © 2026 DevCon. All rights reserved.
                          </p>
                     </div>
                </footer>

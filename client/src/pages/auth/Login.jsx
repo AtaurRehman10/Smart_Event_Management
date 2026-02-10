@@ -1,6 +1,16 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
+import '../../index.css';
+import {
+     Zap,
+     Mail,
+     Lock,
+     AlertCircle,
+     ArrowRight,
+     ShieldCheck,
+     Loader2
+} from 'lucide-react';
 
 export default function Login() {
      const [form, setForm] = useState({ email: '', password: '' });
@@ -15,49 +25,46 @@ export default function Login() {
           setLoading(true);
           try {
                const data = await login(form);
-               navigate(data.user.role === 'Attendee' ? '/dashboard/attendee' : '/');
+               navigate(data.user.role === 'Attendee' ? '/dashboard/attendee' : '/dashboard');
           } catch (err) {
-               setError(err.response?.data?.message || 'Login failed');
+               setError(err.response?.data?.message || 'Invalid credentials. Please try again.');
           } finally {
                setLoading(false);
           }
      };
 
      return (
-          <div className="min-h-screen flex animated-gradient-bg relative overflow-hidden">
-               {/* Decorative Orbs */}
-               <div className="orb orb-primary w-[500px] h-[500px] top-[-10%] left-[-10%]" />
-               <div className="orb orb-secondary w-[400px] h-[400px] bottom-[-10%] right-[-10%]" />
-               <div className="orb orb-accent w-[200px] h-[200px] top-[50%] left-[30%] opacity-[0.04]" />
+          <div className="min-h-screen bg-[#020617] text-slate-100 flex relative overflow-hidden font-sans">
 
-               {/* Floating shapes */}
-               <div className="absolute top-[20%] right-[15%] w-3 h-3 rounded-full bg-[var(--color-primary)] opacity-25 animate-float" />
-               <div className="absolute bottom-[30%] left-[20%] w-2 h-2 rounded-full bg-[var(--color-secondary)] opacity-20 animate-float-slow" />
-               <div className="absolute top-[40%] right-[40%] w-2 h-2 rounded-sm bg-[var(--color-accent)] opacity-15 rotate-45 animate-float" style={{ animationDelay: '1s' }} />
+               {/* Ambient Background Elements */}
+               <div className="fixed inset-0 overflow-hidden pointer-events-none">
+                    <div className="absolute -top-[10%] -left-[10%] h-[600px] w-[600px] rounded-full bg-indigo-500/10 blur-[120px] animate-float-slow" />
+                    <div className="absolute -bottom-[10%] -right-[10%] h-[500px] w-[500px] rounded-full bg-purple-500/10 blur-[100px] animate-float-slow" style={{ animationDelay: '2s' }} />
+               </div>
 
-               {/* Left Panel - Branding */}
-               <div className="hidden lg:flex flex-1 flex-col items-center justify-center p-12 relative z-10">
-                    <div className="max-w-md text-center animate-blur-in">
-                         <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-gradient-to-br from-[var(--color-primary)] to-[var(--color-secondary)] mb-6 shadow-lg animate-float">
-                              <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                              </svg>
+               {/* Left Panel - Branding (Visible on Desktop) */}
+               <div className="hidden lg:flex flex-1 flex-col items-center justify-center p-12 relative z-10 border-r border-white/5">
+                    <div className="max-w-md text-center animate-slide-up">
+                         <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-indigo-600/20 border border-indigo-500/30 shadow-[0_0_40px_rgba(79,70,229,0.15)] mb-8">
+                              <Zap size={40} className="text-indigo-400" />
                          </div>
-                         <h2 className="text-4xl font-bold mb-4">
-                              <span className="bg-clip-text text-transparent bg-gradient-to-r from-white to-blue-200">Welcome to</span>
-                              <br />
-                              <span className="gradient-text text-5xl">EventSphere</span>
+                         <h2 className="text-5xl font-extrabold tracking-tight mb-6 text-white">
+                              Experience the <br />
+                              <span className="gradient-text">Future of Events</span>
                          </h2>
-                         <p className="text-[var(--text-secondary)] text-lg leading-relaxed">
-                              The next generation of event management.<br />
-                              Organize. Connect. Inspire.
+                         <p className="text-slate-400 text-lg leading-relaxed mb-10">
+                              Streamline your event management workflow and connect with your audience like never before.
                          </p>
 
-                         {/* Feature pills */}
-                         <div className="flex flex-wrap justify-center gap-3 mt-8">
-                              {['Interactive Maps', 'Live Polls', 'Smart Badges', 'Real-time Updates'].map((f, i) => (
-                                   <span key={f} className="badge badge-primary animate-slide-up" style={{ animationDelay: `${0.2 + i * 0.1}s` }}>
-                                        {f}
+                         {/* Feature badges */}
+                         <div className="flex flex-wrap justify-center gap-3">
+                              {['Smart Networking', 'Live Analytics', 'Interactive Maps'].map((feature, i) => (
+                                   <span
+                                        key={feature}
+                                        className="px-4 py-1.5 rounded-full border border-indigo-500/20 bg-indigo-500/5 text-xs font-semibold text-indigo-300 tracking-wide animate-slide-up"
+                                        style={{ animationDelay: `${0.1 * i}s` }}
+                                   >
+                                        {feature}
                                    </span>
                               ))}
                          </div>
@@ -67,111 +74,110 @@ export default function Login() {
                {/* Right Panel - Form */}
                <div className="flex-1 flex items-center justify-center p-6 relative z-10">
                     <div className="w-full max-w-md animate-scale-in">
-                         {/* Mobile Logo */}
-                         <div className="text-center mb-8 lg:hidden">
-                              <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-[var(--color-primary)] to-[var(--color-secondary)] mb-4 shadow-lg">
-                                   <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                                   </svg>
+
+                         {/* Mobile Header */}
+                         <div className="text-center mb-10 lg:hidden">
+                              <div className="inline-flex items-center justify-center w-14 h-14 rounded-xl bg-indigo-500/20 border border-indigo-500/30 mb-4">
+                                   <Zap size={28} className="text-indigo-400" />
                               </div>
-                              <h1 className="text-3xl font-bold gradient-text">EventSphere</h1>
+                              <h1 className="text-2xl font-bold tracking-tight text-white">DevCon</h1>
                          </div>
 
-                         {/* Card */}
-                         <div className="glass-card p-8">
-                              <div className="mb-6">
-                                   <h2 className="text-2xl font-bold text-[var(--text-primary)]">Sign in</h2>
-                                   <p className="text-[var(--text-muted)] mt-1">Welcome back! Enter your credentials</p>
+                         <div className="glass-card p-8 md:p-10 shadow-2xl border border-white/10">
+                              <div className="mb-8 text-center">
+                                   <h2 className="text-3xl font-bold text-white tracking-tight">Welcome Back</h2>
+                                   <p className="text-slate-400 text-sm mt-3">Sign in to access your dashboard</p>
                               </div>
 
                               {error && (
-                                   <div className="mb-4 p-3.5 rounded-xl bg-red-500/8 border border-red-500/20 text-red-400 text-sm flex items-center gap-2.5 animate-scale-in" role="alert">
-                                        <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                        </svg>
+                                   <div className="mb-6 p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm flex items-center gap-3 animate-slide-in">
+                                        <AlertCircle size={16} className="shrink-0" />
                                         {error}
                                    </div>
                               )}
 
                               <form onSubmit={handleSubmit} className="space-y-5">
-                                   <div>
-                                        <label htmlFor="email" className="block text-sm font-medium text-[var(--text-secondary)] mb-2">
-                                             Email Address
-                                        </label>
-                                        <div className="relative">
-                                             <svg className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--text-muted)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                                             </svg>
+                                   {/* Email Input */}
+                                   <div className="space-y-1.5">
+                                        <label className="text-xs font-semibold text-slate-300 ml-1">Email Address</label>
+                                        <div className="relative group">
+                                             <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-indigo-400 transition-colors">
+                                                  <Mail size={18} />
+                                             </div>
                                              <input
-                                                  id="email"
                                                   type="email"
-                                                  className="input pl-10"
-                                                  placeholder="you@example.com"
+                                                  required
+                                                  placeholder="name@company.com"
+                                                  className="input pl-12 bg-white/5 border-white/10 focus:border-indigo-500/50 focus:ring-indigo-500/20 text-white placeholder:text-slate-500"
                                                   value={form.email}
                                                   onChange={(e) => setForm({ ...form, email: e.target.value })}
-                                                  required
-                                                  autoFocus
                                              />
                                         </div>
                                    </div>
 
-                                   <div>
-                                        <div className="flex items-center justify-between mb-2">
-                                             <label htmlFor="password" className="block text-sm font-medium text-[var(--text-secondary)]">
-                                                  Password
-                                             </label>
-                                             <button type="button" className="text-xs text-[var(--color-primary)] hover:text-[var(--color-primary-light)] transition-colors">
+                                   {/* Password Input */}
+                                   <div className="space-y-1.5">
+                                        <div className="flex items-center justify-between px-1">
+                                             <label className="text-xs font-semibold text-slate-300">Password</label>
+                                             <button type="button" className="text-xs font-medium text-indigo-400 hover:text-indigo-300 transition-colors">
                                                   Forgot password?
                                              </button>
                                         </div>
-                                        <div className="relative">
-                                             <svg className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--text-muted)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                                             </svg>
+                                        <div className="relative group">
+                                             <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-indigo-400 transition-colors">
+                                                  <Lock size={18} />
+                                             </div>
                                              <input
-                                                  id="password"
                                                   type="password"
-                                                  className="input pl-10"
+                                                  required
                                                   placeholder="••••••••"
+                                                  className="input pl-12 bg-white/5 border-white/10 focus:border-indigo-500/50 focus:ring-indigo-500/20 text-white placeholder:text-slate-500"
                                                   value={form.password}
                                                   onChange={(e) => setForm({ ...form, password: e.target.value })}
-                                                  required
                                              />
                                         </div>
                                    </div>
 
-                                   <div className="flex items-center gap-2">
-                                        <input type="checkbox" id="remember" className="w-4 h-4 rounded border-[var(--border-color)] bg-[var(--bg-elevated)] accent-[var(--color-primary)]" />
-                                        <label htmlFor="remember" className="text-sm text-[var(--text-muted)]">Remember me</label>
+                                   {/* Remember Me */}
+                                   <div className="flex items-center gap-3 px-1 pt-1">
+                                        <input
+                                             type="checkbox"
+                                             id="remember"
+                                             className="w-4 h-4 rounded border-slate-700 bg-slate-900/50 text-indigo-500 focus:ring-indigo-500/20 focus:ring-offset-0"
+                                        />
+                                        <label htmlFor="remember" className="text-sm text-slate-400 cursor-pointer select-none hover:text-slate-300 transition-colors">
+                                             Keep me signed in
+                                        </label>
                                    </div>
 
+                                   {/* Submit Button */}
                                    <button
                                         type="submit"
                                         disabled={loading}
-                                        className="btn btn-primary w-full justify-center py-3 text-base disabled:opacity-50 disabled:cursor-not-allowed"
+                                        className="btn btn-primary w-full justify-center mt-2 py-3"
                                    >
                                         {loading ? (
-                                             <>
-                                                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                                                  Signing in...
-                                             </>
+                                             <Loader2 className="w-5 h-5 animate-spin" />
                                         ) : (
-                                             <>
-                                                  Sign In
-                                                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                                                  </svg>
-                                             </>
+                                             <>Sign In <ArrowRight size={18} /></>
                                         )}
                                    </button>
                               </form>
 
-                              <div className="mt-6 text-center text-sm text-[var(--text-muted)]">
-                                   Don't have an account?{' '}
-                                   <Link to="/register" className="text-[var(--color-primary)] hover:text-[var(--color-primary-light)] font-semibold transition-colors">
-                                        Create account
-                                   </Link>
+                              <div className="mt-8 pt-6 border-t border-white/5 text-center">
+                                   <p className="text-sm text-slate-500">
+                                        Don't have an account?{' '}
+                                        <Link to="/register" className="text-indigo-400 font-medium hover:text-indigo-300 transition-colors">
+                                             Create now
+                                        </Link>
+                                   </p>
                               </div>
+                         </div>
+
+                         {/* Trust footer */}
+                         <div className="mt-8 flex items-center justify-center gap-2 text-[10px] text-slate-600 uppercase tracking-widest font-bold opacity-60">
+                              <ShieldCheck size={14} />
+                              <span>Secure Enterprise Access</span>
                          </div>
                     </div>
                </div>

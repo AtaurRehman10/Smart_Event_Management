@@ -1,101 +1,136 @@
 import { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
+import {
+     Search,
+     Bell,
+     ChevronDown,
+     User as UserIcon,
+     LogOut,
+     Command,
+     Settings,
+     LayoutDashboard
+} from 'lucide-react';
 
 export default function Navbar() {
      const { user, logout } = useAuth();
      const [showProfile, setShowProfile] = useState(false);
 
      return (
-          <header className="sticky top-0 z-30 flex items-center justify-between px-6 py-3 border-b border-[var(--border-color)] bg-[var(--bg-secondary)]/70 backdrop-blur-xl">
-               {/* Search Bar */}
-               <div className="flex-1 max-w-md">
-                    <Link
-                         to="/search"
-                         className="flex items-center gap-2.5 px-4 py-2.5 rounded-xl bg-[var(--bg-primary)]/60 border border-[var(--border-color)] text-[var(--text-muted)] text-sm hover:text-[var(--text-secondary)] hover:border-[var(--border-color-hover)] transition-all w-full group"
-                         aria-label="Search events, sessions, and attendees"
-                    >
-                         <svg className="w-4 h-4 group-hover:text-[var(--color-primary)] transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                         </svg>
-                         <span>Search events, sessions, attendees...</span>
-                         <kbd className="ml-auto hidden sm:inline-flex items-center gap-0.5 px-2 py-0.5 text-xs rounded-md bg-[var(--bg-elevated)] text-[var(--text-muted)] border border-[var(--border-color)]">
-                              ⌘K
-                         </kbd>
-                    </Link>
-               </div>
+          <header className=" top-5 z-50 w-full border-b border-white/5 bg-slate-950/60 backdrop-blur-md">
+               <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 md:px-6">
 
-               {/* Right side */}
-               <div className="flex items-center gap-3">
-                    {/* Notifications */}
-                    <button
-                         className="relative p-2.5 rounded-xl text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-elevated)]/80 transition-all"
-                         aria-label="Notifications"
-                    >
-                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-                         </svg>
-                         <span className="absolute top-1.5 right-1.5 w-2.5 h-2.5 rounded-full bg-[var(--color-danger)] border-2 border-[var(--bg-secondary)]" />
-                    </button>
-
-                    {/* Divider */}
-                    <div className="w-px h-8 bg-[var(--border-color)]" />
-
-                    {/* Profile Dropdown */}
-                    <div className="relative">
-                         <button
-                              onClick={() => setShowProfile(!showProfile)}
-                              className="flex items-center gap-3 px-3 py-1.5 rounded-xl hover:bg-[var(--bg-elevated)]/80 transition-all"
-                              aria-label="User menu"
-                              aria-expanded={showProfile}
+                    {/* Search Bar / Command Palette Look */}
+                    <div className="flex-1 max-w-sm md:max-w-md">
+                         <Link
+                              to="/search"
+                              className="group flex items-center gap-3 rounded-xl border border-white/5 bg-slate-900/50 px-3 py-2 text-sm text-slate-400 transition-all hover:border-indigo-500/30 hover:bg-slate-900/80"
                          >
-                              <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[var(--color-primary)] to-[var(--color-secondary)] flex items-center justify-center text-white text-sm font-bold shadow-sm">
-                                   {user?.name?.charAt(0)?.toUpperCase() || 'U'}
+                              <Search size={16} className="text-slate-500 group-hover:text-indigo-400 transition-colors" />
+                              <span className="hidden sm:inline">Search events or attendees...</span>
+                              <span className="sm:hidden">Search...</span>
+
+                              <div className="ml-auto hidden items-center gap-1 rounded-md border border-white/10 bg-slate-950 px-1.5 py-0.5 text-[10px] font-medium text-slate-500 md:flex">
+                                   <Command size={10} />
+                                   <span>K</span>
                               </div>
-                              <div className="hidden md:block text-left">
-                                   <p className="text-sm font-medium text-[var(--text-primary)]">{user?.name}</p>
-                                   <p className="text-xs text-[var(--text-muted)]">{user?.role}</p>
-                              </div>
-                              <svg className={`w-4 h-4 text-[var(--text-muted)] transition-transform duration-200 ${showProfile ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                              </svg>
+                         </Link>
+                    </div>
+
+                    {/* Right-side Navigation */}
+                    <div className="flex items-center gap-2 md:gap-4">
+
+                         {/* Notifications */}
+                         <button
+                              className="group relative rounded-xl p-2.5 text-slate-400 transition-all hover:bg-white/5 hover:text-white"
+                              aria-label="Notifications"
+                         >
+                              <Bell size={20} />
+                              <span className="absolute right-2.5 top-2.5 h-2 w-2 rounded-full border-2 border-slate-950 bg-indigo-500 shadow-[0_0_10px_rgba(99,102,241,0.5)]" />
                          </button>
 
-                         {showProfile && (
-                              <>
-                                   <div className="fixed inset-0 z-40" onClick={() => setShowProfile(false)} />
-                                   <div className="absolute right-0 top-full mt-2 w-56 py-2 glass-card animate-scale-in z-50" role="menu">
-                                        <div className="px-4 py-3 border-b border-[var(--border-color)]">
-                                             <p className="text-sm font-medium text-[var(--text-primary)]">{user?.name}</p>
-                                             <p className="text-xs text-[var(--text-muted)]">{user?.email}</p>
-                                        </div>
-                                        <Link
-                                             to="/profile"
-                                             className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-[var(--text-secondary)] hover:bg-[var(--bg-elevated)] hover:text-[var(--text-primary)] transition-colors"
-                                             role="menuitem"
-                                             onClick={() => setShowProfile(false)}
-                                        >
-                                             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                                             </svg>
-                                             Profile Settings
-                                        </Link>
-                                        <hr className="my-1 border-[var(--border-color)]" />
-                                        <button
-                                             onClick={() => { logout(); setShowProfile(false); }}
-                                             className="w-full flex items-center gap-2.5 text-left px-4 py-2.5 text-sm text-[var(--color-danger)] hover:bg-[var(--bg-elevated)] transition-colors"
-                                             role="menuitem"
-                                        >
-                                             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                                             </svg>
-                                             Sign Out
-                                        </button>
+                         {/* Divider */}
+                         <div className="h-6 w-[1px] bg-white/10" />
+
+                         {/* Profile Dropdown */}
+                         <div className="relative">
+                              <button
+                                   onClick={() => setShowProfile(!showProfile)}
+                                   className="flex items-center gap-3 rounded-xl p-1.5 transition-all hover:bg-white/5"
+                                   aria-expanded={showProfile}
+                              >
+                                   <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-indigo-600 to-purple-600 text-xs font-bold text-white shadow-lg ring-1 ring-white/10">
+                                        {user?.name?.charAt(0)?.toUpperCase() || 'U'}
                                    </div>
-                              </>
-                         )}
+
+                                   <div className="hidden text-left md:block">
+                                        <p className="text-xs font-bold text-white tracking-tight">{user?.name}</p>
+                                        <p className="text-[10px] font-medium uppercase tracking-widest text-slate-500">{user?.role}</p>
+                                   </div>
+
+                                   <ChevronDown
+                                        size={14}
+                                        className={`text-slate-500 transition-transform duration-300 ${showProfile ? 'rotate-180' : ''}`}
+                                   />
+                              </button>
+
+                              {/* Dropdown Menu */}
+                              {showProfile && (
+                                   <>
+                                        {/* Overlay to close menu */}
+                                        <div className="fixed inset-0 z-40" onClick={() => setShowProfile(false)} />
+
+                                        <div className="absolute right-0 top-full z-50 mt-2 w-64 origin-top-right overflow-hidden rounded-2xl border border-white/10 bg-slate-900 p-1.5 shadow-2xl backdrop-blur-xl animate-in fade-in zoom-in-95 duration-200">
+
+                                             <div className="px-3 py-3 border-b border-white/5">
+                                                  <p className="text-xs font-bold text-white truncate">{user?.name}</p>
+                                                  <p className="text-[10px] text-slate-500 truncate mt-0.5">{user?.email}</p>
+                                             </div>
+
+                                             <div className="py-1">
+                                                  <DropdownLink
+                                                       to={user?.role === 'Attendee' ? '/dashboard/attendee' : '/dashboard'}
+                                                       icon={LayoutDashboard}
+                                                       label="Dashboard"
+                                                       onClick={() => setShowProfile(false)}
+                                                  />
+                                                  <DropdownLink
+                                                       to="/profile"
+                                                       icon={Settings}
+                                                       label="Account Settings"
+                                                       onClick={() => setShowProfile(false)}
+                                                  />
+                                             </div>
+
+                                             <div className="mt-1 border-t border-white/5 pt-1">
+                                                  <button
+                                                       onClick={() => { logout(); setShowProfile(false); }}
+                                                       className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-xs font-semibold text-rose-400 transition-colors hover:bg-rose-500/10 hover:text-rose-300"
+                                                  >
+                                                       <LogOut size={16} />
+                                                       Sign Out
+                                                  </button>
+                                             </div>
+                                        </div>
+                                   </>
+                              )}
+                         </div>
                     </div>
                </div>
           </header>
+     );
+}
+
+/* Internal helper for cleaner dropdown items */
+function DropdownLink({ to, icon: Icon, label, onClick }) {
+     return (
+          <Link
+               to={to}
+               onClick={onClick}
+               className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-xs font-semibold text-slate-400 transition-colors hover:bg-white/5 hover:text-white"
+          >
+               <Icon size={16} />
+               {label}
+          </Link>
      );
 }

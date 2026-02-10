@@ -495,3 +495,37 @@ select.input {
 .stagger-4 { animation-delay: 0.2s; }
 .stagger-5 { animation-delay: 0.25s; }
 .stagger-6 { animation-delay: 0.3s; }
+
+@layer components {
+  /* The "Glass" effect for the container */
+  .glass-card {
+    @apply bg-[#0f172a]/80 backdrop-blur-xl rounded-3xl;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  }
+
+  /* Styling the inputs to be dark and sleek */
+  .input {
+    @apply w-full h-12 rounded-xl outline-none transition-all duration-200;
+    @apply border border-white/10 bg-slate-900/50 text-white px-4;
+  }
+
+  /* The primary blue button */
+  .btn-primary {
+    @apply flex items-center gap-2 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold rounded-xl transition-all active:scale-[0.98];
+  }
+
+  /* The text gradient for "Future of Events" */
+  .gradient-text {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-cyan-400;
+  }
+}
+
+/* Optional: Smooth animations */
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-slide-up {
+  animation: slideUp 0.6s ease-out forwards;
+}
