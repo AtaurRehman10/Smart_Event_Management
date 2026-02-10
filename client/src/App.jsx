@@ -41,6 +41,11 @@ import BadgeDesigner from './pages/badges/BadgeDesigner.jsx';
 // Search
 import Search from './pages/search/Search.jsx';
 
+// AI Feature Pages
+import Chatbot from './pages/Chatbot.jsx';
+import MyAgenda from './pages/MyAgenda.jsx';
+import Recommendations from './pages/Recommendations.jsx';
+
 // Home
 import Home from './pages/Home.jsx';
 
@@ -198,6 +203,30 @@ export default function App() {
                                         element={
                                              <ProtectedRoute>
                                                   <AppLayout><Search /></AppLayout>
+                                             </ProtectedRoute>
+                                        }
+                                   />
+                                   <Route
+                                        path="/chatbot"
+                                        element={
+                                             <ProtectedRoute>
+                                                  <AppLayout><Chatbot /></AppLayout>
+                                             </ProtectedRoute>
+                                        }
+                                   />
+                                   <Route
+                                        path="/agenda"
+                                        element={
+                                             <ProtectedRoute>
+                                                  <AppLayout><MyAgenda /></AppLayout>
+                                             </ProtectedRoute>
+                                        }
+                                   />
+                                   <Route
+                                        path="/recommendations"
+                                        element={
+                                             <ProtectedRoute>
+                                                  <AppLayout><Recommendations /></AppLayout>
                                              </ProtectedRoute>
                                         }
                                    />
